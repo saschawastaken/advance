@@ -16,7 +16,7 @@ class Advancer():
             pygame.draw.rect(win, self.color, (i[0] * size + 1, i[1] * size + 1, size - 1, size - 1))
 
     def move(self, rows):
-        if 0 == randint(0,0):
+        if 0 == randint(0,4):
             direction = randint(-1, 1)
             toChange = self.path[-1]
 
