@@ -1,6 +1,6 @@
 """
 TODO:
-    - Develop bullet direction
+    - Bullet Image and img turning
 """
 #
 from player import Player
@@ -28,18 +28,14 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit(0)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                p.kShoot = True
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_SPACE:
-                p.kShoot = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            p.kShoot = True
 
     # MOVEMENTS
     p.move(win, pygame.mouse.get_pos(), g.rows)
     a.move(g.rows)
     # INTERACTIONS
-    p.shoot()
+    p.shoot(win, pygame.mouse.get_pos(), g.rows)
     # GRAPHICS
     win.fill((0,0,0))
     g.show(win)
