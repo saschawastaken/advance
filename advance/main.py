@@ -1,12 +1,13 @@
 """
 TODO:
-    - Bullet Image and img turning
+    - Bullet shooting velocity fixing
+    - Building function
+    - Bullet ammonition and ammonition-interface top-left
 """
 #
-from player import Player
 import pygame
 from pygame.locals import *
-import math
+from random import randint
 #
 import grid
 import advancer
@@ -19,9 +20,9 @@ pygame.display.set_caption("ADVANCER")
 # OBJECTS
 clock = pygame.time.Clock()
 fps = 60
-g = grid.Grid(50)
+g = grid.Grid(50, win)
 p = player.Player([int(g.rows / 2),g.rows - 2], 'img/test.png')
-a = advancer.Advancer()
+enemys = []
 # RUNNING
 while True:
     clock.tick(fps)
@@ -32,13 +33,28 @@ while True:
             p.kShoot = True
 
     # MOVEMENTS
-    p.move(win, pygame.mouse.get_pos(), g.rows)
-    a.move(g.rows)
+    p.move(pygame.mouse.get_pos(), g.size)
+    for enemy in enemys:
+        enemy.move(g.rows)
     # INTERACTIONS
-    p.shoot(win, pygame.mouse.get_pos(), g.rows)
+    p.shoot(win, pygame.mouse.get_pos(), g.size)
+    ## ENEMY-BULLET COLLISION
+    try:
+        for bullet in p.bullets:
+            for enemy in enemys:
+                for pos in enemy.path:
+                    if bullet.rect.colliderect(pygame.Rect(pos[0] * g.size, pos[1] * g.size, g.size, g.size)):
+                        enemys.remove(enemy)
+                        break
+    except IndexError: pass  
+    # ADVANCER SPAWNING
+    if randint(0, 100) == 0:
+        enemys.append(advancer.Advancer())
     # GRAPHICS
     win.fill((0,0,0))
     g.show(win)
-    p.show(win, g.rows)
-    a.show(win, g.rows)
+    p.show(win, g.size)
+    for enemy in enemys:
+        enemy.show(win, g.size)
+    
     pygame.display.update()
