@@ -1,8 +1,6 @@
 #
 import pygame
 import math
-
-from pygame import mouse
 #
 import bullet
 
@@ -21,17 +19,15 @@ class Player():
         # BUILD ACTION
         self.kBuildMode = False
         
-    def show(self, win, rows):
-        size = win.get_width() / rows
+    def show(self, win, size):
         img_copy = pygame.transform.rotate(self.img, self.imgAngle)
         win.blit(img_copy, (self.pos[0] * size - int(img_copy.get_width() / 2) , self.pos[1] * size - int(img_copy.get_height() / 2 )))
         for bullet in self.bullets:
-            bullet.show(win, rows)
+            bullet.show(win, size)
 
-    def move(self, win, mousePos, rows):
+    def move(self, mousePos, size):
         # PLAYER ROTATING
         mx, my = mousePos
-        size = win.get_width() / rows
 
         opposite_leg = mx - self.pos[0] * size
         adjacent_leg = self.pos[1] * size - my
@@ -39,13 +35,12 @@ class Player():
         if adjacent_leg > 0: self.imgAngle = 90 - math.degrees(math.atan(opposite_leg / adjacent_leg))
 
         for bullet in self.bullets:
-            bullet.move(win, mousePos, rows)
+            bullet.move()
 
-    def shoot(self, win, mousePos, rows):
+    def shoot(self, win, mousePos, size):
         if self.kShoot:
             pos_x, pos_y = self.pos
             mx, my = mousePos
-            size = win.get_width() / rows
 
             opposite_leg = mx - self.pos[0] * size
             adjacent_leg = self.pos[1] * size - my
@@ -53,6 +48,10 @@ class Player():
             if adjacent_leg > 0: self.bullets.append(bullet.Bullet([pos_x, pos_y], (opposite_leg / adjacent_leg) * -1, 1, self.imgAngle + 90))
 
             self.kShoot = False
+        # REMOVING BULLETS WHEN THEY GET OUTSIDE THE WINDOW
+        for b in self.bullets:
+            if b.pos[0] * size < 0 or b.pos[0] * size > win.get_width() or b.pos[1] * size < 0:
+                self.bullets.remove(b)
 
     def build(self):
         pass
