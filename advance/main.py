@@ -17,6 +17,11 @@ pygame.display.init()
 ws = [500,500]
 win = pygame.display.set_mode(ws)
 pygame.display.set_caption("ADVANCER")
+# FONT
+pygame.font.init()
+globalFontSize = 15
+globalFont = pygame.font.SysFont('calibri', globalFontSize)
+text = globalFont.render('kek', False, (255,0,0))
 # OBJECTS
 clock = pygame.time.Clock()
 fps = 60
@@ -52,6 +57,7 @@ while True:
         enemys.append(advancer.Advancer())
     # GRAPHICS
     win.fill((0,0,0))
+    win.blit(text, (25,25))
     g.show(win)
     p.show(win, g.size)
     for enemy in enemys:
