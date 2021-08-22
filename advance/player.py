@@ -14,6 +14,7 @@ class Player():
         self.img = pygame.image.load(imgURL)
         self.color = (0,255,0)
         # INTERACTIONS (Key elements marked with k at beginning)
+        self.score = 0
         self.bullets = []
         self.bulletAmmo = 30
         self.kShoot = False

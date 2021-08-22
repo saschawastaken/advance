@@ -2,7 +2,6 @@
 TODO:
     - Bullet shooting velocity fixing
     - Building function
-    - Bullet ammonition and ammonition-interface top-left
 """
 #
 import pygame
@@ -12,6 +11,7 @@ from random import randint
 import grid
 import advancer
 import player
+import tile
 # DISPLAY
 pygame.display.init()
 ws = [500,500]
@@ -19,15 +19,18 @@ win = pygame.display.set_mode(ws)
 pygame.display.set_caption("ADVANCER")
 # FONT
 pygame.font.init()
-globalFontSize = 15
-globalFont = pygame.font.SysFont('calibri', globalFontSize)
-text = globalFont.render('kek', False, (255,0,0))
+def getText(text, size, fontStyle, color, isBald=False):
+    font = pygame.font.SysFont(fontStyle, size)
+    rendered = font.render(text, isBald, color)
+    return rendered
+
 # OBJECTS
 clock = pygame.time.Clock()
 fps = 60
 g = grid.Grid(50, win)
 p = player.Player([int(g.rows / 2),g.rows - 2], 'img/test.png')
 enemys = []
+t = tile.Tile([0, 0], [3, 0])
 # RUNNING
 while True:
     clock.tick(fps)
@@ -50,6 +53,8 @@ while True:
                 for pos in enemy.path:
                     if bullet.rect.colliderect(pygame.Rect(pos[0] * g.size, pos[1] * g.size, g.size, g.size)):
                         enemys.remove(enemy)
+                        p.bullets.remove(bullet)
+                        p.score += 1
                         break
     except IndexError: pass  
     # ADVANCER SPAWNING
@@ -57,9 +62,16 @@ while True:
         enemys.append(advancer.Advancer())
     # GRAPHICS
     win.fill((0,0,0))
-    win.blit(text, (25,25))
     g.show(win)
+    # SHOWING SCORE
+    textScore = getText("Score: " + str(p.score), 15, 'calibri', (255,255,255), True)
+    win.blit(textScore, (win.get_width() - textScore.get_width(), 0))
+    # SHOWING AMMONITION 
+    textAmmo = getText("Ammo: " + str(p.bulletAmmo), 15, 'calibri', (255,255,255), True)
+    win.blit(textAmmo, (win.get_width() - textAmmo.get_width(), textScore.get_height()))
+    # SHOWING OBJECTS
     p.show(win, g.size)
+    t.show(win, g.size)
     for enemy in enemys:
         enemy.show(win, g.size)
     
