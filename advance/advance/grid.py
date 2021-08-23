@@ -2,8 +2,9 @@ import pygame
 
 class Grid():
 
-    def __init__(self, rows) -> None:
+    def __init__(self, rows, win) -> None:
         self.rows = rows
+        self.size = win.get_width() / self.rows
         self.color = (64,64,64)
 
     def show(self, win):

@@ -10,8 +10,7 @@ class Advancer():
         # GRAPHICAL ELEMENTS
         self.color = (128,0,255)
 
-    def show(self, win, rows):
-        size = win.get_width() / rows
+    def show(self, win, size):
         for i in self.path:
             pygame.draw.rect(win, self.color, (i[0] * size + 1, i[1] * size + 1, size - 1, size - 1))
 
